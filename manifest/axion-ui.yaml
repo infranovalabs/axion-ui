@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+
+kind: Deployment
+
+metadata:
+  namespace: axion-service
+  name: axion-ui-deployment
+
+spec:
+  replicas: 1
+
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+
+  selector:
+    matchLabels:
+      app: axion-ui-deployment
+  template:
+    metadata:
+      labels:
+        app: axion-ui-deployment
+
+    spec:
+      containers:
+      - name: axion-ui-deployment
+        image: acrtodoappbappa.azurecr.io/axion-ui:v3
+        
+       
+        ports:
+        - containerPort: 80
+
+

@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+
+kind: Ingress
+
+metadata:
+  namespace: axion-service
+  name: axion-ui-ingress
+  
+spec:
+  ingressClassName: azure-application-gateway
+
+  rules:
+  - host: ui.anihub.shop
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: axion-ui-service
+            port: 
+              number: 80
