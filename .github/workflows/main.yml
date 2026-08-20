@@ -1,0 +1,43 @@
+name: axion-postgress-database
+
+on: workflow_dispatch
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  Database-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout postgresql server
+        uses: actions/checkout@v4
+        
+      - name: azure login
+        uses: azure/login@v3.0.1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: check login
+        run: az account show      
+
+      - name: show files
+        run: ls
+
+      - name: connect to AKS
+        run: az aks get-credentials --resource-group jaydeep_rg1 --name jaydeep-aks-cluster --overwrite-existing
+
+      - name: deploy yaml
+        run: |
+          kubectl apply -f ./0.namespace.yaml
+          kubectl apply -f ./1.secret.yaml 
+          kubectl apply -f ./2.deployment-postgresql.yaml 
+          kubectl apply -f ./3.service.yaml
+          kubectl apply -f ./4.pgadmin.yaml
+          kubectl apply -f ./5.pgadmin-service.yaml                             
+
+
+     
